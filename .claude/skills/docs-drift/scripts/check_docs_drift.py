@@ -139,9 +139,7 @@ def list_dir(path):
         return []
 
 
-def list_skills(root):
-    """Skill names = subdirs of skills/ that contain a SKILL.md."""
-    skills_dir = os.path.join(root, "skills")
+def _skills_in(skills_dir):
     names = []
     for entry in list_dir(skills_dir):
         skill_path = os.path.join(skills_dir, entry)
@@ -150,6 +148,18 @@ def list_skills(root):
         ):
             names.append(entry)
     return names
+
+
+def list_skills(root):
+    """Exported skill names = subdirs of skills/ that contain a SKILL.md."""
+    return _skills_in(os.path.join(root, "skills"))
+
+
+def list_private_skills(root):
+    """Repo-private skill names = subdirs of .claude/skills/ with a SKILL.md.
+    These are project-level dev tooling, not exported with the plugin, so they
+    are exempt from the README catalog checks."""
+    return _skills_in(os.path.join(root, ".claude", "skills"))
 
 
 def list_commands(root):
@@ -246,13 +256,13 @@ def check_command_catalog(root, findings):
 
 def check_orphans(root, findings):
     """Index files / catalog rows that point at skills which no longer exist."""
-    skills = set(list_skills(root))
+    skills = set(list_skills(root)) | set(list_private_skills(root))
     for name in list_index_files(root):
         if name not in skills:
             findings.error(
                 "orphan",
                 "docs/knowledge/skills/%s-index.md has no matching "
-                "skills/%s/ directory" % (name, name),
+                "skills/%s/ or .claude/skills/%s/ directory" % (name, name, name),
             )
 
 

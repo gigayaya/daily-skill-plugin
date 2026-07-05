@@ -4,7 +4,7 @@ argument-hint: "[optional path to a checkout, defaults to this repo]"
 ---
 
 Invoke the `docs-drift` skill: run the mechanical checker
-(`skills/docs-drift/scripts/check_docs_drift.py`), then do the semantic pass —
+(`.claude/skills/docs-drift/scripts/check_docs_drift.py`), then do the semantic pass —
 compare each doc's description against what the code actually does — and report
 both mechanical and semantic drift.
 

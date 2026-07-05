@@ -1,6 +1,9 @@
 # docs-drift
 
-A **docs-drift** skill for this plugin. The docs in this repo are
+A **docs-drift** skill for this repo. It lives in `.claude/skills/`
+(project-level dev tooling), so it loads only when working inside this repo
+and is **not exported** to users who install the plugin. The docs in this
+repo are
 hand-maintained — the README "Skills in this plugin" and "Slash commands"
 tables, the codemap "Skill indexes" table, the per-skill
 `docs/knowledge/skills/<name>-index.md` files, and a pile of relative links.
@@ -46,10 +49,10 @@ legitimate exception (e.g. a quoted non-English source), so Claude judges each.
 ## Running the script directly
 
 ```bash
-python skills/docs-drift/scripts/check_docs_drift.py          # human-readable
-python skills/docs-drift/scripts/check_docs_drift.py --json   # machine output
-python skills/docs-drift/scripts/check_docs_drift.py --strict # warnings fail too (CI)
-python skills/docs-drift/scripts/check_docs_drift.py --root . # point at a checkout
+python .claude/skills/docs-drift/scripts/check_docs_drift.py          # human-readable
+python .claude/skills/docs-drift/scripts/check_docs_drift.py --json   # machine output
+python .claude/skills/docs-drift/scripts/check_docs_drift.py --strict # warnings fail too (CI)
+python .claude/skills/docs-drift/scripts/check_docs_drift.py --root . # point at a checkout
 ```
 
 Exit code `0` = no errors, `1` = errors found (or warnings under `--strict`).

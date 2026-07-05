@@ -52,8 +52,11 @@ if [[ -z "$touched_paths" ]]; then
 fi
 
 # Gate 1: any SKILL.md in skills/<name>/SKILL.md touched this turn?
+# Private skills under .claude/skills/ are repo dev tooling, not exported with
+# the plugin, so they are exempt from the catalog requirements.
 skill_md_paths="$(printf '%s\n' "$touched_paths" \
-  | grep -E '(^|/)skills/[^/]+/SKILL\.md$' || true)"
+  | grep -E '(^|/)skills/[^/]+/SKILL\.md$' \
+  | grep -v '\.claude/skills/' || true)"
 
 if [[ -z "$skill_md_paths" ]]; then
   exit 0

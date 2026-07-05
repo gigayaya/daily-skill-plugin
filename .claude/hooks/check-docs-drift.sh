@@ -36,7 +36,7 @@ if [[ -n "$project_dir" && -d "$project_dir" ]]; then
   cd "$project_dir" || { log "cannot cd to $project_dir; skipping"; exit 0; }
 fi
 
-script="${CLAUDE_PROJECT_DIR:-$PWD}/skills/docs-drift/scripts/check_docs_drift.py"
+script="${CLAUDE_PROJECT_DIR:-$PWD}/.claude/skills/docs-drift/scripts/check_docs_drift.py"
 if [[ ! -f "$script" ]]; then
   log "checker not found at $script; skipping"
   exit 0

@@ -15,3 +15,9 @@ deterministic HTML/sanitization work on the script side.
 Skills are auto-discovered from `skills/<name>/SKILL.md` — the YAML
 `description` field is what triggers invocation. Bundled assets are referenced
 via `${CLAUDE_PLUGIN_ROOT}` so paths survive installation.
+
+Repo-private skills (dev tooling for this repo, e.g. `docs-drift`) live in
+`.claude/skills/<name>/` instead: they load as project-level skills only when
+working inside this repo and are not exported to plugin installers. They
+reference assets via `${CLAUDE_PROJECT_DIR}` and are exempt from the README
+skill/command catalogs.

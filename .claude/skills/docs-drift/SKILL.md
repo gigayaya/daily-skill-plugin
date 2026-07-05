@@ -28,7 +28,7 @@ then a **semantic pass** that only an LLM can do. Report both, fix on approval.
 It is standard-library Python — no install needed.
 
 ```bash
-python ${CLAUDE_PLUGIN_ROOT}/skills/docs-drift/scripts/check_docs_drift.py --json
+python ${CLAUDE_PROJECT_DIR}/.claude/skills/docs-drift/scripts/check_docs_drift.py --json
 ```
 
 The script resolves the repo root via `git` (or `--root DIR`) and reports, as
@@ -117,3 +117,6 @@ changed and in which files so they can review the diff.
   warnings as errors (handy in CI), `--root DIR` to point at another checkout.
 - Read-first, write-on-approval: the analysis stays in chat; only approved
   edits are persisted.
+- This skill lives in `.claude/skills/` (project-level), not `skills/` — it is
+  repo-internal dev tooling and is not exported to users who install the
+  plugin.
