@@ -22,7 +22,7 @@
 | Skill | Index | What it does |
 |---|---|---|
 | `ab-review` | [skills/ab-review-index.md](skills/ab-review-index.md) | Dual-agent pro/con review of a diff, judged by the main agent |
-| `markdown-to-html-report` | [skills/markdown-to-html-report-index.md](skills/markdown-to-html-report-index.md) | Long markdown → self-contained magazine-style HTML report |
+| `markdown-to-html-article` | [skills/markdown-to-html-article-index.md](skills/markdown-to-html-article-index.md) | Long markdown → self-contained magazine-style HTML article |
 | `scope-research` | [skills/scope-research-index.md](skills/scope-research-index.md) | Surveys the codebase for a proposed change, reports per-touchpoint facts |
 | `session-reflection` | [skills/session-reflection-index.md](skills/session-reflection-index.md) | Extracts session friction and proposes project rules to prevent it |
 | `docs-drift` (repo-private, in `.claude/skills/`) | [skills/docs-drift-index.md](skills/docs-drift-index.md) | Verifies the plugin's docs match its code — deterministic script + semantic pass |

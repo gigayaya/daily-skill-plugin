@@ -1,9 +1,9 @@
 ---
-description: Convert long markdown content into a self-contained HTML report
+description: Convert long markdown content into a self-contained HTML article
 argument-hint: "[path to markdown file, or leave empty to use latest output]"
 ---
 
-Invoke the `markdown-to-html-report` skill to produce a readable HTML report.
+Invoke the `markdown-to-html-article` skill to produce a readable HTML article.
 
 Source: $ARGUMENTS
 

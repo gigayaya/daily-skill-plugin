@@ -7,7 +7,7 @@ is the contract between them. This keeps scripts small, unit-testable, and
 runnable as plain CLIs without Claude.
 
 "Understands" can include *re-authoring*, not just classifying. In
-`markdown-to-html-report`, for example, the LLM rewrites each source section
+`markdown-to-html-article`, for example, the LLM rewrites each source section
 into distilled prose (`body_markdown` in the metadata contract) and the script
 only renders it — the editorial judgment lives on the LLM side, the
 deterministic HTML/sanitization work on the script side.

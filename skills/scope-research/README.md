@@ -44,7 +44,7 @@ requirement, or via `/scope-research`. It never auto-runs.
    files with role notes and per-touchpoint LOC ranges, sums the ranges
    into an `Estimated total change` line at the top, and states relevant
    facts neutrally. If the report is long, Claude suggests running
-   `/html-report` on it.
+   `/html-article` on it.
 
 Like `ab-review`, this is **pure orchestration** — no transformation script.
 
@@ -68,5 +68,5 @@ scope-research/
   conclusion to the reader.
 - It is read-only — it never writes code, never edits files outside the
   report it returns in chat, never commits.
-- The report stays in the conversation; pair with `/html-report` for a
+- The report stays in the conversation; pair with `/html-article` for a
   saved, readable artifact if you want one.

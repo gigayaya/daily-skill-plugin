@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="@@lang">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@@title</title>
+<style>@@css</style>
+<style>@@hl_light</style>
+<style>@media (prefers-color-scheme: dark) { @@hl_dark }
+[data-theme="dark"] { @@hl_dark }
+[data-theme="light"] { @@hl_light }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__title">@@title</div>
+  <button type="button" class="topbar__btn" id="theme-toggle" title="Toggle dark mode">&#9680;</button>
+  <div class="topbar__progress" id="progress-bar"></div>
+</header>
+
+<div class="layout">
+
+  <aside class="toc">
+    <div class="toc__title">Contents</div>
+    <ul class="toc__list">
+@@toc_html
+    </ul>
+  </aside>
+
+  <main class="article">
+
+    <header class="hero">
+      <figure class="hero__image">@@hero_html</figure>
+      <h1 class="hero__title">@@title</h1>
+      <p class="hero__lede">@@lede_html</p>
+      <div class="hero__meta">@@meta_line</div>
+    </header>
+
+@@sections_html
+
+@@glossary_html
+
+  </main>
+</div>
+
+<div class="floating">
+  <button type="button" id="back-to-top" title="Back to top">&#8593;</button>
+</div>
+
+@@scripts_html
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var themeBtn = document.getElementById('theme-toggle');
+  var stored = localStorage.getItem('mh-theme');
+  if (stored) root.dataset.theme = stored;
+  themeBtn.addEventListener('click', function () {
+    var cur = root.dataset.theme ||
+      (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('mh-theme', next);
+  });
+
+  document.querySelectorAll('.code-block__copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var pre = btn.closest('.code-block').querySelector('pre code, pre');
+      navigator.clipboard.writeText(pre.innerText).then(function () {
+        btn.classList.add('copied');
+        var orig = btn.textContent;
+        btn.textContent = 'Copied';
+        setTimeout(function () { btn.classList.remove('copied'); btn.textContent = orig; }, 1500);
+      }, function () {});
+    });
+  });
+
+  document.getElementById('back-to-top').addEventListener('click', function () {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  var bar = document.getElementById('progress-bar');
+  var tocItems = Array.prototype.slice.call(document.querySelectorAll('.toc__item'));
+  var sections = Array.prototype.slice.call(document.querySelectorAll('.section'));
+  function onScroll() {
+    var h = document.documentElement;
+    var pct = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = Math.min(100, Math.max(0, pct)) + '%';
+    var active = null;
+    sections.forEach(function (s) {
+      if (s.getBoundingClientRect().top < 120) active = s.id;
+    });
+    tocItems.forEach(function (it) {
+      it.classList.toggle('toc__item--active', it.dataset.sectionId === active);
+    });
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+
+</body>
+</html>

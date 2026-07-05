@@ -165,7 +165,7 @@ decides.
 #### End — cross-skill hint
 
 If the report is long (≥150 lines, ≥5 H2/H3 sections, or simply a lot to
-scan), suggest the user run `/html-report` on it. Otherwise skip the hint.
+scan), suggest the user run `/html-article` on it. Otherwise skip the hint.
 
 ## Notes
 
@@ -173,7 +173,7 @@ scan), suggest the user run `/html-report` on it. Otherwise skip the hint.
 - The skill is read-only: it never writes code, never edits files outside of
   the report it returns in chat, never commits.
 - The report stays in the conversation. If the user wants a saved artifact,
-  they can run `/html-report` on the report after the fact.
+  they can run `/html-article` on the report after the fact.
 - No verdicts: no t-shirt size, no time estimate, no risk rating. LOC
   change appears only as honest per-touchpoint ranges (and their additive
   sum at the top of the report) — never as a single number or bucket. If

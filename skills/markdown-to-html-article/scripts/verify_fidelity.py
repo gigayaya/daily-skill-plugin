@@ -29,6 +29,7 @@ NUMBER_RE = re.compile(r"\d+(?:[.,:]\d+)*%?")
 # \u escapes (not literal CJK chars) so this file passes the repo's
 # english-only check (GR-1): Hiragana/Katakana, CJK ext-A, CJK, Hangul.
 CJK_RE = re.compile("[\\u3040-\\u30ff\\u3400-\\u4dbf\\u4e00-\\u9fff\\uac00-\\ud7af]")
+RAW_HTML_RE = re.compile(r"</?[a-zA-Z][a-zA-Z0-9-]*(\s[^<>]*)?/?>")
 
 
 def split_code_blocks(text: str) -> tuple[str, list[tuple[str, str]]]:
@@ -131,21 +132,21 @@ def run_checks(source: str, meta: dict) -> tuple[list[dict], list[dict]]:
                 "detail": f"source code block (lang={lang or '(none)'}, first line {first!r}) missing or altered in rewritten bodies",
             })
 
-    # E4 quote-in-body: quotes must be verbatim in their own section body.
+    # E4 quote-in-body: pull quotes must be verbatim in their own section body.
     for s in sections:
         body = s.get("body_markdown", "")
-        for q in s.get("must_read_quotes", []):
+        for q in s.get("pull_quotes", []):
             if q not in body:
                 errors.append({
                     "check": "quote-in-body",
-                    "detail": f"must_read_quote not verbatim in section {s.get('id')!r}: {q[:80]!r}",
+                    "detail": f"pull_quote not verbatim in section {s.get('id')!r}: {q[:80]!r}",
                 })
 
     # W1 fact-token-retention: source numbers / inline code / paths / URLs
     # should survive somewhere in the rewritten report. Trailing sentence
     # punctuation on URL/path matches is a tokenizer artifact — strip it.
     haystack = "\n".join(
-        [bodies, meta.get("tldr", "")] + [s.get("summary", "") for s in sections]
+        [bodies, meta.get("lede", "")] + [s.get("summary", "") for s in sections]
     )
     tokens: set[str] = set()
     tokens.update(t for t in NUMBER_RE.findall(prose) if len(t) >= 2)
@@ -177,6 +178,17 @@ def run_checks(source: str, meta: dict) -> tuple[list[dict], list[dict]]:
                 "check": "language-drift",
                 "detail": "rewritten bodies contain CJK text but source has none",
             })
+
+    # W3 raw-html-in-body: the renderer escapes raw HTML, so any tag the
+    # analyst wrote will show up as literal text. Warning, not error —
+    # prose like "List<String>" can false-positive; the main agent judges.
+    body_prose, _ = split_code_blocks(bodies)
+    body_prose = INLINE_CODE_RE.sub("", body_prose)
+    for m in {m.group(0) for m in RAW_HTML_RE.finditer(body_prose)}:
+        warnings.append({
+            "check": "raw-html-in-body",
+            "detail": f"likely raw HTML in body_markdown (renders escaped): {m!r}",
+        })
 
     return errors, warnings
 

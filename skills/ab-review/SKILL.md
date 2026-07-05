@@ -130,5 +130,5 @@ something that does not hold up, say so.
   in `agents/`); they are review-only, with read-only file and git access.
 - Always exactly two sub-agents: one Pro, one Con.
 - The skill never writes files or changes code; it is review-only.
-- If the final write-up is long, the `markdown-to-html-report` skill may
+- If the final write-up is long, the `markdown-to-html-article` skill may
   naturally apply for presenting it — optional and separate.

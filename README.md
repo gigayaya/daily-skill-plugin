@@ -8,7 +8,7 @@ Each skill auto-triggers when its `description` matches what you're asking for, 
 
 | Skill | What it does |
 |---|---|
-| [markdown-to-html-report](./skills/markdown-to-html-report/) | Converts long AI-generated markdown (code reviews, plans, specs) into a single self-contained HTML report — TL;DR, sticky TOC, semantic callouts, syntax highlighting, mermaid diagrams, dark mode |
+| [markdown-to-html-article](./skills/markdown-to-html-article/) | Converts long AI-generated markdown (code reviews, plans, specs) into a single self-contained HTML article — hero image, article lede, magazine typography, pull quotes, syntax highlighting, dark mode. Zero Python dependencies |
 | [session-reflection](./skills/session-reflection/) | Reflects on the current session — finds where Claude's output was rejected or corrected, distills the root causes, and proposes project rules (into `CLAUDE.md` or your existing rule system) so the same mistake doesn't recur. No dependencies |
 | [ab-review](./skills/ab-review/) | Two-sided "AB" code review — dispatches a Pro reviewer (arguing the change is mergeable) and a Con reviewer (arguing it is not) in parallel, each citing concrete evidence from the diff, then verifies every cited snippet against the repo before the main agent judges. Manual-trigger, no dependencies |
 | [scope-research](./skills/scope-research/) | Surveys the codebase against a proposed requirement and reports the concrete facts a reader needs to assess scope themselves — affected files, callers, prior similar changes, current test state, conventions in use, with honest per-touchpoint LOC ranges. States facts only, never issues t-shirt sizes or risk ratings. Manual-trigger, no dependencies |
@@ -39,21 +39,13 @@ After install, `${CLAUDE_PLUGIN_ROOT}` resolves to the cached plugin directory. 
 
 You can also enable auto-update under `/plugin` → **Marketplaces**.
 
-### 2. Install per-skill dependencies
+### 2. Per-skill dependencies
 
-Some skills ship runtime scripts that need third-party libraries. Install them once per machine.
+No skill in this plugin needs third-party libraries — they run on standard-library Python or pure LLM + built-in tools, so there is nothing to install beyond the plugin itself.
 
-#### markdown-to-html-report — Python deps
+#### markdown-to-html-article — no dependencies
 
-Requires Python 3.9+ and four packages (`markdown`, `pygments`, `jinja2`, `bleach`):
-
-```bash
-pip install -r ${CLAUDE_PLUGIN_ROOT}/skills/markdown-to-html-report/scripts/requirements.txt
-```
-
-For full setup options (uv, venv, troubleshooting), see [`skills/markdown-to-html-report/README.md`](./skills/markdown-to-html-report/README.md#required-dependencies).
-
-The other three skills (`session-reflection`, `ab-review`, `scope-research`) have no third-party dependencies — `session-reflection` and `ab-review` ship standard-library-only Python helpers (no install), and `scope-research` is pure LLM + built-in tools.
+The renderer is standard-library Python; nothing to install. Bundled highlight.js is inlined automatically when the article contains code.
 
 ---
 
@@ -63,7 +55,7 @@ Every skill has a matching slash command so you can invoke it explicitly instead
 
 | Command | Skill | Use it for |
 |---|---|---|
-| `/html-report [path]` | `markdown-to-html-report` | Convert a markdown file (or the latest long markdown in chat) into an HTML report |
+| `/html-article [path]` | `markdown-to-html-article` | Convert a markdown file (or the latest long markdown in chat) into an HTML article |
 | `/reflect [focus]` | `session-reflection` | Reflect on this session and propose project rules |
 | `/ab-review [scope]` | `ab-review` | Run a two-sided adversarial review of your code changes |
 | `/scope-research [requirement]` | `scope-research` | Survey the codebase against a requirement and report touchpoints + facts |
@@ -78,11 +70,11 @@ Open a Claude Code session and ask:
 
 > List the skills you have available.
 
-All four skills (`markdown-to-html-report`, `session-reflection`, `ab-review`, `scope-research`) should appear in the list. To smoke-test `markdown-to-html-report` end-to-end, ask Claude to:
+All four skills (`markdown-to-html-article`, `session-reflection`, `ab-review`, `scope-research`) should appear in the list. To smoke-test `markdown-to-html-article` end-to-end, ask Claude to:
 
-> Convert this README into an HTML report.
+> Convert this README into an HTML article.
 
-You should see Claude invoke the skill, run the renderer, and hand you back a `file://` link to a `.html` file in `./claude-reports/`.
+You should see Claude invoke the skill, run the renderer, and hand you back a `file://` link to a `.html` file in `./claude-articles/`.
 
 ---
 
@@ -96,17 +88,17 @@ gigachang-skills/
 ├── agents/                        # plugin-bundled sub-agent definitions (auto-discovered)
 │   ├── ab-review-pro.md
 │   ├── ab-review-con.md
-│   ├── markdown-report-analyst.md
+│   ├── markdown-article-analyst.md
 │   └── scope-research-surveyor.md
 ├── commands/                      # slash-command definitions (auto-discovered)
 │   ├── ab-review.md
-│   ├── html-report.md
+│   ├── html-article.md
 │   ├── reflect.md
 │   └── scope-research.md
 ├── skills/
 │   └── <skill-name>/
 │       ├── SKILL.md               # frontmatter (name + description) + workflow
-│       ├── README.md              # human-facing docs + dependency setup
+│       ├── README.md              # human-facing docs + standalone CLI usage
 │       └── ...                    # scripts, templates, assets per skill
 ├── .claude/                       # repo-private dev tooling (NOT exported with the plugin)
 │   ├── settings.json              # Stop-hook wiring for this repo
