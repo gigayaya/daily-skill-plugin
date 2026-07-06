@@ -6,10 +6,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/check-skill-completion.sh"
-          },
-          {
-            "type": "command",
             "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/check-docs-drift.sh"
           }
         ]

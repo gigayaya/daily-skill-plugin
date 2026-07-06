@@ -1,10 +1,12 @@
 {
   "name": "gigachang-skills",
-  "version": "1.0.0",
-  "description": "A collection of skills for personal daily workflows",
+  "version": "1.1.0",
+  "description": "Engineering skills for AI-assisted coding — two-sided AB code review, codebase scope research, session reflection into project rules, and long-form HTML article rendering",
   "author": {
     "name": "GigaChang"
   },
+  "homepage": "https://github.com/gigayaya/gigachang-skills",
+  "repository": "https://github.com/gigayaya/gigachang-skills",
   "license": "MIT",
-  "keywords": ["productivity", "workflow", "daily"]
+  "keywords": ["engineering", "ai-coding", "code-review", "scope-research", "session-reflection", "html-article"]
 }

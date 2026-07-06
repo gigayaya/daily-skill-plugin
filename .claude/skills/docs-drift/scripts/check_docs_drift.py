@@ -254,6 +254,59 @@ def check_command_catalog(root, findings):
             )
 
 
+def check_skill_commands(root, findings):
+    """Every exported skill must be invocable via a slash command: at least
+    one commands/*.md must mention the skill by name. (Command slugs need not
+    match skill names — e.g. session-reflection ships /reflect.)"""
+    cmd_dir = os.path.join(root, "commands")
+    command_texts = [
+        read_text(os.path.join(cmd_dir, f))
+        for f in list_dir(cmd_dir)
+        if f.endswith(".md")
+    ]
+    for name in list_skills(root):
+        if not any(name in text for text in command_texts):
+            findings.error(
+                "skill-command",
+                "skill '%s' has no slash command — no commands/*.md mentions "
+                "it; create the matching command file (and its README rows)"
+                % name,
+            )
+
+
+def check_manifest_sync(root, findings):
+    """plugin.json and the plugin's entry in marketplace.json are a
+    hand-maintained pair — their descriptions must stay identical."""
+    plugin_path = os.path.join(root, ".claude-plugin", "plugin.json")
+    market_path = os.path.join(root, ".claude-plugin", "marketplace.json")
+    if not os.path.isfile(plugin_path) or not os.path.isfile(market_path):
+        return
+    try:
+        plugin = json.loads(read_text(plugin_path))
+        market = json.loads(read_text(market_path))
+    except json.JSONDecodeError as exc:
+        findings.error(
+            "manifest-sync", "cannot parse a .claude-plugin manifest: %s" % exc
+        )
+        return
+    name = plugin.get("name")
+    entries = [
+        p for p in market.get("plugins", []) if p.get("name") == name
+    ]
+    if not entries:
+        findings.error(
+            "manifest-sync",
+            "marketplace.json has no plugins[] entry named '%s'" % name,
+        )
+        return
+    if entries[0].get("description") != plugin.get("description"):
+        findings.error(
+            "manifest-sync",
+            "plugin.json \"description\" differs from the plugins[] entry in "
+            "marketplace.json — keep the two identical",
+        )
+
+
 def check_orphans(root, findings):
     """Index files / catalog rows that point at skills which no longer exist."""
     skills = set(list_skills(root)) | set(list_private_skills(root))
@@ -405,9 +458,11 @@ def main():
 
     check_skill_catalog(root, findings)
     check_command_catalog(root, findings)
+    check_skill_commands(root, findings)
     check_orphans(root, findings)
     check_dead_links(root, findings)
     check_english_only(root, findings)
+    check_manifest_sync(root, findings)
     check_version_bump(root, findings)
 
     if args.json:

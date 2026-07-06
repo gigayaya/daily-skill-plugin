@@ -21,7 +21,8 @@ It follows the repo's **"LLM understands / script transforms"** split:
 Triggered manually when you ask Claude to check docs drift, or via
 `/docs-drift`. The same script also backs a Stop hook
 (`.claude/hooks/check-docs-drift.sh`), so mechanical drift is caught
-automatically after any turn that touches catalog files.
+automatically whenever a turn ends with uncommitted changes to catalog files
+(detected via `git status`).
 
 ## What the script checks (mechanical, deterministic)
 
@@ -29,9 +30,11 @@ automatically after any turn that touches catalog files.
 |---|---|---|
 | `skill-catalog` | A skill in `skills/` missing its index file, its README row, or its codemap row; frontmatter `name` ≠ directory name | error (name = warning) |
 | `command-catalog` | A `commands/<slug>.md` not listed in the README "Slash commands" table | error |
+| `skill-command` | An exported skill that no `commands/*.md` mentions (every skill ships a slash command; slugs may differ from skill names) | error |
 | `orphan` | An index file pointing at a skill that no longer exists | error |
 | `dead-link` | A relative markdown link whose target file is gone (placeholders with `<…>` are skipped) | error |
 | `english-only` | A file containing CJK/Kana/Hangul (GR-1) | warning |
+| `manifest-sync` | `plugin.json` `description` differing from the plugin's entry in `marketplace.json` | error |
 | `version-bump` | Functional files changed vs `HEAD` with no `plugin.json` version bump | warning |
 
 `errors` mean the docs are provably out of sync. `warnings` may have a

@@ -5,15 +5,15 @@
 | Path | What it is | When to read |
 |---|---|---|
 | `.claude-plugin/plugin.json` | Plugin manifest, holds the `version` | Bumping version after any functional change |
-| `.claude-plugin/marketplace.json` | Single-plugin marketplace entry | Changing how the plugin is installable |
+| `.claude-plugin/marketplace.json` | Single-plugin marketplace entry; its plugin `description` must stay identical to `plugin.json`'s | Changing how the plugin is installable |
 | `README.md` | User-facing overview + canonical Repository layout tree | Reference when uncertain about the full file tree |
+| `tests/` | Stdlib `unittest` suite for the bundled scripts (`md_subset`, `svg_sanitizer`, `check_docs_drift`); run `python3 -m unittest discover -s tests` | Changing any script the suite covers, or adding a new script |
 
 ## Dev tooling (this repo only)
 
 | Path | What it is | When to read |
 |---|---|---|
-| `.claude/hooks/check-skill-completion.sh` | Stop hook — when a new `skills/*/SKILL.md` is added in a turn, verifies that the matching `commands/*.md`, `docs/knowledge/codemap.md`, and `README.md` are also touched; `exit 2` with hints if any is missing | Changing what counts as "skill is fully wired up", or debugging why the hook fires |
-| `.claude/hooks/check-docs-drift.sh` | Stop hook — when a turn touches a skill/command/agent/doc/README/manifest, runs `.claude/skills/docs-drift/scripts/check_docs_drift.py`; `exit 2` with the report if it finds errors | Changing when the automatic docs-drift check fires |
+| `.claude/hooks/check-docs-drift.sh` | Stop hook — when `git status` shows uncommitted changes under a skill/command/agent/doc/README/manifest path, runs `.claude/skills/docs-drift/scripts/check_docs_drift.py`; `exit 2` with the report if it finds errors (at most one blocking round per turn) | Changing when the automatic docs-drift check fires |
 | `.claude/skills/docs-drift/` | Repo-private docs-drift skill (project-level, not exported with the plugin) — deterministic checker script + semantic pass | Changing what the docs-drift check covers |
 | `.claude/commands/docs-drift.md` | Project-level `/docs-drift` command that invokes the private skill | Renaming the command or editing its invocation prompt |
 

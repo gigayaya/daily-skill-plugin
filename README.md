@@ -1,6 +1,6 @@
 # gigachang-skills
 
-A personal collection of [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) skills for daily workflows. Each skill is a small, focused capability that Claude can invoke automatically (via skill description matching) or that you can trigger manually.
+A personal collection of [Claude Code](https://docs.claude.com/en/docs/claude-code/overview) skills for software-engineering workflows. Each skill is a small, focused capability that Claude can invoke automatically (via skill description matching) or that you can trigger manually.
 
 ## Skills in this plugin
 
@@ -102,10 +102,11 @@ gigachang-skills/
 │       └── ...                    # scripts, templates, assets per skill
 ├── .claude/                       # repo-private dev tooling (NOT exported with the plugin)
 │   ├── settings.json              # Stop-hook wiring for this repo
-│   ├── hooks/                     # check-skill-completion.sh, check-docs-drift.sh
+│   ├── hooks/                     # check-docs-drift.sh (Stop hook)
 │   ├── commands/                  # /docs-drift (project-level command)
 │   └── skills/
 │       └── docs-drift/            # docs-drift skill (project-level, loads only in this repo)
+├── tests/                         # stdlib unittest suite for the bundled scripts
 ├── CLAUDE.md                      # project rules read by Claude Code each session
 ├── LICENSE
 └── README.md                      # this file

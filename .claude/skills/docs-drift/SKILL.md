@@ -40,10 +40,15 @@ JSON, every mismatch it can prove:
   directory.
 - **command-catalog** — a `commands/<slug>.md` not listed in the README
   "Slash commands" table.
+- **skill-command** — an exported skill that no `commands/*.md` mentions
+  (every exported skill ships a slash command; slugs may differ from skill
+  names).
 - **orphan** — an index file pointing at a skill that no longer exists.
 - **dead-link** — a relative markdown link whose target file is gone.
 - **english-only** — a file containing CJK/Kana/Hangul (GR-1); a *warning*,
   since a quoted non-English source is allowed.
+- **manifest-sync** — `plugin.json`'s `description` differing from the
+  plugin's entry in `marketplace.json`.
 - **version-bump** — functional files changed vs `HEAD` without a
   `plugin.json` version bump; a *warning*.
 
@@ -109,10 +114,10 @@ changed and in which files so they can review the diff.
 ## Notes
 
 - The script is the single source of truth for mechanical checks — the Stop
-  hook (`.claude/hooks/check-docs-drift.sh`) runs the same script after any
-  turn that touches catalog files, so mechanical drift is caught even when
-  this skill is not explicitly invoked. This skill adds the semantic pass and
-  the guided fix-up.
+  hook (`.claude/hooks/check-docs-drift.sh`) runs the same script whenever a
+  turn ends with uncommitted changes to catalog files (detected via
+  `git status`), so mechanical drift is caught even when this skill is not
+  explicitly invoked. This skill adds the semantic pass and the guided fix-up.
 - The script is a plain CLI: `--json` for machine output, `--strict` to treat
   warnings as errors (handy in CI), `--root DIR` to point at another checkout.
 - Read-first, write-on-approval: the analysis stays in chat; only approved
